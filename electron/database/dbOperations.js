@@ -61,20 +61,18 @@ function insertData() {
 }
 
 
-function insertMessage({ id, channel, content, timestamp }) {
+function insertMessage(content) {
   console.log(content)
   const stmt = db.prepare(`
     INSERT INTO messages (
-    id, channel_id, load_id, account_name,
-    origin_city, origin_state, origin_country,
-    destination_city, destination_state, destination_country,
-    pickup_date, delivery_date, weight, make_bid, bid_price,
-    type, title, timestamp
-  ) VALUES (
-    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-  );
+  id, channel_id, load_id, account_name,
+  origin_city, origin_state, origin_country,
+  destination_city, destination_state, destination_country,
+  pickup_date, delivery_date, weight, make_bid, bid_price,
+  type, title, timestamp
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
   `);
-  stmt.run(id, channel, JSON.stringify(content), timestamp);
+  // stmt.run(id, channel, JSON.stringify(content), timestamp);
 }
 
 function getChannels() {

@@ -26,11 +26,7 @@ function setupWebSocket(win) {
         console.log('📩 Message received:', message);
 
 
-        insertMessage({
-            channel: message.channel,
-            content: message.content,
-            timestamp: message.timestamp
-        });
+        insertMessage(message.content);
 
         win.webContents.send('new-message', message);
     });

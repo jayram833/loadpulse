@@ -28,57 +28,22 @@ wss.on('connection', (ws) => {
 // HTTP POST endpoint
 app.post('/send', (req, res) => {
     const {
-        id,
         channel_id,
-        load_id,
-        account_name,
-        origin_city,
-        origin_state,
-        origin_country,
-        destination_city,
-        destination_state,
-        destination_country,
-        pickup_date,
-        delivery_date,
-        weight,
-        make_bid,
-        bid_price,
-        type,
-        title,
         timestamp
     } = req.body;
 
     const message = {
         channel: channel_id || 'default',
-        content: {
-            id,
-            channel_id,
-            load_id,
-            account_name,
-            origin_city,
-            origin_state,
-            origin_country,
-            destination_city,
-            destination_state,
-            destination_country,
-            pickup_date,
-            delivery_date,
-            weight,
-            make_bid,
-            bid_price,
-            type,
-            title,
-            timestamp
-        },
+        content: req.body,
         timestamp: timestamp || Date.now()
     };
+    console.log("Message body", message);
 
     clients.forEach(ws => {
         if (ws.readyState === ws.OPEN) {
             ws.send(JSON.stringify(message));
         }
     });
-
     res.json({ success: true });
 });
 
