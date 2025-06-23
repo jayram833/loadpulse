@@ -33,9 +33,7 @@ app.post('/send', (req, res) => {
     } = req.body;
 
     const message = {
-        channel: channel,
         content: req.body,
-        timestamp: timestamp || Date.now()
     };
     console.log("Message body", message);
 
