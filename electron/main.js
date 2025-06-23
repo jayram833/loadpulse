@@ -1,11 +1,12 @@
 import { app, BrowserWindow } from "electron";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
+import WebSocket from "ws";
 import installExtension from "electron-devtools-installer";
-import WebSocket from 'ws';
+
 import { insertMessage } from "./database/dbOperations.js";
 
-
+const isDev = !app.isPackaged;
 import "./ipc.js"
 
 
@@ -23,37 +24,41 @@ function setupWebSocket(win) {
 
     socket.on('message', (data) => {
         const message = JSON.parse(data);
-        // console.log('📩 Message received:', message);
         insertMessage(message.content);
-
-        win.webContents.send('new-message', message);
+        win.webContents.send('new-message', message.content);
     });
 
     socket.on('error', console.error);
 }
 
 
-const createWindow = function () {
+const createWindow = async function () {
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
+        icon: path.join(__dirname, "../src/assets/icons/icon.icns"),
         webPreferences: {
             preload: path.join(__dirname, "preload.js"),
         }
     })
 
-    mainWindow.loadURL("http://localhost:5173");
+    if (isDev) {
+        mainWindow.loadURL("http://localhost:5173");
+    } else {
+        mainWindow.loadFile(path.join(__dirname, "../dist/index.html"))
+        app.disableHardwareAcceleration();
+    }
+
 
     setupWebSocket(mainWindow);
 
+    if (isDev) {
+        installExtension.default(installExtension.REACT_DEVELOPER_TOOLS).then((ext) => console.log(`Added Extension: ${ext.name}`)).catch((err) => console.log("Error installing extension:", err));
 
+        // open devtools
+        mainWindow.webContents.openDevTools();
+    }
 
-    installExtension.default(installExtension.REACT_DEVELOPER_TOOLS)
-        .then((ext) => console.log(`Added Extension: ${ext.name}`))
-        .catch((err) => console.log("Error installing extension:", err));
-
-    // open devtools
-    mainWindow.webContents.openDevTools();
 
     mainWindow.on('closed', () => {
         mainWindow = null;

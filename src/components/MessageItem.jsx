@@ -1,4 +1,4 @@
-function MessageItem({ message, onClick }) {
+function MessageItem({ message, onClick, selectedMessage }) {
     const getColor = (type) => {
         switch (type) {
             case "BID": return "text-green-600";
@@ -8,13 +8,15 @@ function MessageItem({ message, onClick }) {
         }
     };
 
+
+
     return (
         <div
-            className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-md transition"
+            className={`${selectedMessage.id === message.id ? "bg-gray-100" : ""} cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-md transition`}
             onClick={onClick}
         >
             <div className={`font-medium ${getColor(message.type)}`}>
-                {message.title}
+                {message.load_id}
             </div>
             <div className="text-xs text-gray-500 dark:text-gray-400">
                 {new Date(message.timestamp).toLocaleString()}

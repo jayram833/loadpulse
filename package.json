@@ -2,20 +2,51 @@
   "name": "loadpulse",
   "private": true,
   "version": "0.0.0",
+  "author": "Jay",
+  "description": "LoadPulse is a lightweight desktop app that mimics MS Teams channel messaging for logistics bots. It receives real-time BID/NO BID updates from bots via WebSocket, stores messages in a local SQLite database, and displays them in an organized channel-based interface.",
   "type": "module",
   "main": "electron/main.js",
+  "build": {
+    "appId": "com.example.loadpulse",
+    "productName": "LoadPulse",
+    "files": [
+      "dist/**",
+      "electron/**",
+      "package.json"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "src/assets/icons/icon.icns",
+      "identity": null,
+      "category": "public.app-category.utilities"
+    },
+    "extraResources": [
+      {
+        "from": "electron/database/database/loadpulse.db",
+        "to": "loadpulse.db"
+      }
+    ],
+    "asarUnpack": [
+      "node_modules/better-sqlite3/**",
+      "node_modules/ws/**"
+    ]
+
+  },
   "scripts": {
     "dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
     "build": "vite build",
     "electron": "electron .",
-    "rebuild": "electron-rebuild"
+    "dist": "npm run build && electron-builder",
+    "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
-    "@cuj1559/electron-push-receiver": "^3.1.8",
+    "axios": "^1.10.0",
     "better-sqlite3": "^11.10.0",
     "body-parser": "^2.2.0",
     "cross-env": "^7.0.3",
-    "electron-devtools-installer": "^4.0.0",
     "express": "^5.1.0",
     "lucide-react": "^0.518.0",
     "react": "^19.1.0",
@@ -32,7 +63,7 @@
     "concurrently": "^9.1.2",
     "electron": "^36.5.0",
     "electron-builder": "^26.0.12",
-    "electron-rebuild": "^3.2.9",
+    "electron-devtools-installer": "^4.0.0",
     "electron-reload": "^2.0.0-alpha.1",
     "eslint": "^9.25.0",
     "eslint-plugin-react-hooks": "^5.2.0",

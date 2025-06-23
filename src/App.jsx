@@ -6,7 +6,6 @@ import MessageDetails from "./components/MessageDetails";
 import EmptyState from "./components/EmptyState";
 
 
-
 function App() {
   const [channels, setChannels] = useState([]);
   const [expandedChannelId, setExpandedChannelId] = useState(null);
@@ -26,7 +25,7 @@ function App() {
       setChannels(prevChannels =>
         prevChannels.map(ch =>
           ch.id === channel
-            ? { ...ch, messages: [...ch.messages, content] }
+            ? { ...ch, messages: [content, ...ch.messages] }
             : ch
         )
       );
@@ -59,6 +58,7 @@ function App() {
             expandedChannelId={expandedChannelId}
             onSelectChannel={handleSelectChannel}
             onSelectMessage={handleSelectMessage}
+            selectedMessage={selectedMessage}
           />
         }
         content={
