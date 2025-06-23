@@ -58,16 +58,23 @@ function insertData() {
     ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
   );
 `);
+}
 
 
-  insertMessage.run(
-    "msg-10", "load-bot", "L12342", "ACME Logistics",
-    "Chicago", "IL", "USA",
-    "Dallas", "TX", "USA",
-    "2025-06-20", "2025-06-22", "22,000 lbs", 1, "$1500",
-    "BID", "BID - Chicago to Dallas", "2025-06-19T08:30:00Z"
+function insertMessage({ id, channel, content, timestamp }) {
+  console.log(content)
+  const stmt = db.prepare(`
+    INSERT INTO messages (
+    id, channel_id, load_id, account_name,
+    origin_city, origin_state, origin_country,
+    destination_city, destination_state, destination_country,
+    pickup_date, delivery_date, weight, make_bid, bid_price,
+    type, title, timestamp
+  ) VALUES (
+    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
   );
-
+  `);
+  stmt.run(id, channel, JSON.stringify(content), timestamp);
 }
 
 function getChannels() {
@@ -80,4 +87,4 @@ function getMessages(channelId) {
 
 
 
-export { createTables, insertData, getChannels, getMessages }
+export { createTables, insertMessage, getChannels, getMessages }

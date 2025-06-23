@@ -27,25 +27,63 @@ wss.on('connection', (ws) => {
 
 // HTTP POST endpoint
 app.post('/send', (req, res) => {
-    const { channel, content } = req.body;
+    app.post('/send', (req, res) => {
+        const {
+            id,
+            channel_id,
+            load_id,
+            account_name,
+            origin_city,
+            origin_state,
+            origin_country,
+            destination_city,
+            destination_state,
+            destination_country,
+            pickup_date,
+            delivery_date,
+            weight,
+            make_bid,
+            bid_price,
+            type,
+            title,
+            timestamp
+        } = req.body;
 
-    const message = {
-        channel: channel || 'default',
-        content,
-        timestamp: Date.now()
-    };
+        const message = {
+            channel: channel_id || 'default',
+            content: {
+                id,
+                channel_id,
+                load_id,
+                account_name,
+                origin_city,
+                origin_state,
+                origin_country,
+                destination_city,
+                destination_state,
+                destination_country,
+                pickup_date,
+                delivery_date,
+                weight,
+                make_bid,
+                bid_price,
+                type,
+                title,
+                timestamp
+            },
+            timestamp: timestamp || Date.now()
+        };
 
-    // Broadcast to all WebSocket clients
-    clients.forEach(ws => {
-        if (ws.readyState === ws.OPEN) {
-            ws.send(JSON.stringify(message));
-        }
+        clients.forEach(ws => {
+            if (ws.readyState === ws.OPEN) {
+                ws.send(JSON.stringify(message));
+            }
+        });
+
+        res.json({ success: true });
     });
 
-    res.json({ success: true });
-});
-
-// Start the combined server
-server.listen(PORT, () => {
-    console.log(`🚀 HTTP + WebSocket server running on http://localhost:${PORT}`);
-});
+    // Start the combined server
+    server.listen(PORT, () => {
+        console.log(`🚀 HTTP + WebSocket server running on http://localhost:${PORT}`);
+    });

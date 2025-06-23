@@ -3,6 +3,7 @@ import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import installExtension from "electron-devtools-installer";
 import WebSocket from 'ws';
+import { insertMessage } from "./database/dbOperations.js";
 
 
 import "./ipc.js"

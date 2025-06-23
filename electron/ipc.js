@@ -1,10 +1,7 @@
 import { ipcMain } from "electron";
-import { createTables, insertData, getChannels, getMessages } from "./database/dbOperations.js";
+import { createTables, getChannels, getMessages } from "./database/dbOperations.js";
 
 createTables();
-
-// insertData();
-
 
 
 ipcMain.handle("get-channels", async () => {
