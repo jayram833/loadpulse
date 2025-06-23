@@ -14,7 +14,7 @@ const __dirname = dirname(__filename);
 let mainWindow;
 
 function setupWebSocket(win) {
-    const socket = new WebSocket('ws://localhost:8080');
+    const socket = new WebSocket('wss://loadpulse.onrender.com');
 
     socket.on('open', () => {
         console.log('🔌 Connected to WebSocket server');
@@ -23,6 +23,7 @@ function setupWebSocket(win) {
     socket.on('message', (data) => {
         const message = JSON.parse(data);
         console.log('📩 Message received:', message);
+
 
         insertMessage({
             channel: message.channel,

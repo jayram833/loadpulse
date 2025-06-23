@@ -1,19 +1,20 @@
 import express from 'express';
 import { WebSocketServer } from 'ws';
 import bodyParser from 'body-parser';
+import http from 'http'; // ⬅ Combine WS + HTTP
 
 const app = express();
-const PORT = 3000;
-const WSS_PORT = 8080;
+const PORT = process.env.PORT || 3000;
+
+// Create an HTTP server and attach both express and websocket to it
+const server = http.createServer(app);
+const wss = new WebSocketServer({ server }); // ⬅ Attach WebSocket to same server
+
+const clients = new Set();
 
 app.use(bodyParser.json());
 
-// Set of connected WebSocket clients
-const clients = new Set();
-
-// WebSocket Server
-const wss = new WebSocketServer({ port: WSS_PORT });
-
+// WebSocket connection handler
 wss.on('connection', (ws) => {
     console.log('✅ Client connected');
     clients.add(ws);
@@ -24,9 +25,10 @@ wss.on('connection', (ws) => {
     });
 });
 
-// HTTP Endpoint for Bots to send messages
+// HTTP POST endpoint
 app.post('/send', (req, res) => {
     const { channel, content } = req.body;
+
     const message = {
         channel: channel || 'default',
         content,
@@ -43,8 +45,7 @@ app.post('/send', (req, res) => {
     res.json({ success: true });
 });
 
-app.listen(PORT, () => {
-    console.log(`🚀 HTTP server running at http://localhost:${PORT}`);
+// Start the combined server
+server.listen(PORT, () => {
+    console.log(`🚀 HTTP + WebSocket server running on http://localhost:${PORT}`);
 });
-
-console.log(`🌐 WebSocket server running on ws://localhost:${WSS_PORT}`);
