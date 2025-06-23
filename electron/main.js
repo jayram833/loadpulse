@@ -23,9 +23,7 @@ function setupWebSocket(win) {
 
     socket.on('message', (data) => {
         const message = JSON.parse(data);
-        console.log('📩 Message received:', message);
-
-
+        // console.log('📩 Message received:', message);
         insertMessage(message.content);
 
         win.webContents.send('new-message', message);
@@ -73,4 +71,3 @@ app.whenReady().then(() => {
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit();
 });
-

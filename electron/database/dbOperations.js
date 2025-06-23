@@ -35,19 +35,10 @@ function createTables() {
 }
 
 
+function insertMessage(message) {
+  const { content, channel } = message;
 
-function insertData() {
-
-  // Insert sample channels
-  const insertChannel = db.prepare(`
-  INSERT OR IGNORE INTO channels (id, name) VALUES (?, ?);
-`);
-
-  insertChannel.run("load-bot", "Load Bot");
-  insertChannel.run("east-coast", "East Coast Bids");
-
-  // Insert sample messages
-  const insertMessage = db.prepare(`
+  const insertStatement = db.prepare(`
   INSERT INTO messages (
     id, channel_id, load_id, account_name,
     origin_city, origin_state, origin_country,
@@ -58,21 +49,18 @@ function insertData() {
     ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
   );
 `);
-}
 
+  const { id, channel_id, load_id, account_name,
+    origin_city, origin_state, origin_country,
+    destination_city, destination_state, destination_country,
+    pickup_date, delivery_date, weight, make_bid, bid_price,
+    type, title, timestamp } = content;
 
-function insertMessage(content) {
-  console.log(content)
-  const stmt = db.prepare(`
-    INSERT INTO messages (
-  id, channel_id, load_id, account_name,
-  origin_city, origin_state, origin_country,
-  destination_city, destination_state, destination_country,
-  pickup_date, delivery_date, weight, make_bid, bid_price,
-  type, title, timestamp
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-  `);
-  // stmt.run(id, channel, JSON.stringify(content), timestamp);
+  insertStatement.run(id, channel_id, load_id, account_name,
+    origin_city, origin_state, origin_country,
+    destination_city, destination_state, destination_country,
+    pickup_date, delivery_date, weight, make_bid, bid_price,
+    type, title, timestamp);
 }
 
 function getChannels() {

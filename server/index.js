@@ -28,12 +28,12 @@ wss.on('connection', (ws) => {
 // HTTP POST endpoint
 app.post('/send', (req, res) => {
     const {
-        channel_id,
+        channel,
         timestamp
     } = req.body;
 
     const message = {
-        channel: channel_id || 'default',
+        channel: channel,
         content: req.body,
         timestamp: timestamp || Date.now()
     };

@@ -9,7 +9,7 @@ import EmptyState from "./components/EmptyState";
 
 function App() {
   const [token, setToken] = useState(null);
-  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState("");
 
   const [channels, setChannels] = useState([]);
   const [expandedChannelId, setExpandedChannelId] = useState(null);
@@ -22,6 +22,17 @@ function App() {
   const handleSelectMessage = (message) => {
     setSelectedMessage(message);
   };
+
+  async function getMesages() {
+    await window.api.onNewMessage((msg) => {
+      setMessages(prevMsgs => [...prevMsgs, msg]);
+    });
+  }
+
+  useEffect(() => {
+    getMesages();
+  }, [])
+
 
   async function fetchData() {
     const channelsList = await window.api.getChannels();
