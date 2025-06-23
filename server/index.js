@@ -82,8 +82,10 @@ app.post('/send', (req, res) => {
 
         res.json({ success: true });
     });
+});
 
-    // Start the combined server
-    server.listen(PORT, () => {
-        console.log(`🚀 HTTP + WebSocket server running on http://localhost:${PORT}`);
-    });
+// Start the combined server
+server.listen(PORT, () => {
+    console.log(`🚀 HTTP + WebSocket server running on http://localhost:${PORT}`);
+});
+
