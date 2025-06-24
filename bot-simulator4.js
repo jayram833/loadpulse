@@ -1,7 +1,13 @@
 import axios from 'axios';
+import https from 'https';
 
 // Your server endpoint
-const SERVER_URL = 'https://loadpulse.onrender.com/send';
+
+const SERVER_URL = 'https://localhost:443/send';
+const httpsAgent = new https.Agent({
+    rejectUnauthorized: false
+});
+
 
 const cities = [
     { origin: ['Boston', 'MA'], dest: ['Buffalo', 'NY'] },
@@ -16,7 +22,7 @@ const cities = [
     { origin: ['Spokane', 'WA'], dest: ['Boise', 'ID'] }
 ];
 
-let counter = 25000;
+let counter = 60000;
 
 function randomWeight() {
     return `${18000 + Math.floor(Math.random() * 7000)} lbs`;
@@ -64,7 +70,7 @@ function generateMessage() {
 async function sendMessage() {
     const data = generateMessage();
     try {
-        const res = await axios.post(SERVER_URL, data);
+        const res = await axios.post(SERVER_URL, data, { httpsAgent });
         console.log('✅ Sent:', data.content.id, '-', data.content.title);
     } catch (err) {
         console.error('❌ Error sending:', err.message);
@@ -72,4 +78,4 @@ async function sendMessage() {
 }
 
 // Send every 5 seconds
-setInterval(sendMessage, 500);
+setInterval(sendMessage, 2000);

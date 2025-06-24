@@ -1,2 +1,9 @@
 @import "tailwindcss";
+@plugin "tailwind-scrollbar";
+
 @custom-variant dark (&:where(.dark, .dark *));
+
+
+.scrollbar-stable {
+  scrollbar-gutter: stable;
+}

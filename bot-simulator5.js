@@ -16,7 +16,7 @@ const cities = [
     { origin: ['Spokane', 'WA'], dest: ['Boise', 'ID'] }
 ];
 
-let counter = 35000;
+let counter = 40100;
 
 function randomWeight() {
     return `${18000 + Math.floor(Math.random() * 7000)} lbs`;
@@ -72,4 +72,4 @@ async function sendMessage() {
 }
 
 // Send every 5 seconds
-setInterval(sendMessage, 500);
+setInterval(sendMessage, 2000);

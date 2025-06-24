@@ -9,7 +9,7 @@ import EmptyState from "./components/EmptyState";
 function App() {
   const [channels, setChannels] = useState([]);
   const [expandedChannelId, setExpandedChannelId] = useState(null);
-  const [selectedMessage, setSelectedMessage] = useState(null);
+  const [selectedMessage, setSelectedMessage] = useState(0);
 
   const handleSelectChannel = (channelId) => {
     setExpandedChannelId((prev) => (prev === channelId ? null : channelId));
@@ -49,7 +49,7 @@ function App() {
   }, [])
 
   return (
-    <div className="h-screen w-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white font-sans">
+    <div className="h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white font-sans ">
       <Header />
       <Layout
         sidebar={

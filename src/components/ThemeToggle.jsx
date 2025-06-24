@@ -18,6 +18,7 @@ function ThemeToggle() {
             onClick={() => setDarkMode(!darkMode)}
             className={`
         relative w-10 h-10 rounded-full
+        cursor-pointer
         transition-all duration-300 ease-out
         transform hover:scale-105 active:scale-95
         ${darkMode
