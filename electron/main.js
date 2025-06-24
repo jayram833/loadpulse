@@ -1,10 +1,9 @@
 import { app, BrowserWindow } from "electron";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
-import WebSocket from "ws";
 import installExtension from "electron-devtools-installer";
+import { setupWebSocket } from "./setupWebSocket.js";
 
-import { insertMessage } from "./database/dbOperations.js";
 
 const isDev = !app.isPackaged;
 import "./ipc.js"
@@ -14,22 +13,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 let mainWindow;
-
-function setupWebSocket(win) {
-    const socket = new WebSocket('wss://loadpulse.onrender.com');
-
-    socket.on('open', () => {
-        console.log('🔌 Connected to WebSocket server');
-    });
-
-    socket.on('message', (data) => {
-        const message = JSON.parse(data);
-        insertMessage(message.content);
-        win.webContents.send('new-message', message.content);
-    });
-
-    socket.on('error', console.error);
-}
 
 
 const createWindow = async function () {
