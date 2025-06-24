@@ -2,10 +2,11 @@ import db from './db.js';
 
 function createTables() {
   db.prepare(`
-    CREATE TABLE IF NOT EXISTS channels (
-      id TEXT PRIMARY KEY,
-      name TEXT NOT NULL,
-      subscribed INTEGER DEFAULT 1
+  CREATE TABLE IF NOT EXISTS channels (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
   `).run();
 
@@ -71,6 +72,15 @@ function getMessages(channelId) {
   return db.prepare(`SELECT * FROM messages WHERE channel_id = ? ORDER BY timestamp DESC`).all(channelId);
 }
 
+function addChannel(newChannel) {
+  const { id, name, description } = newChannel;
+  db.prepare(`
+    INSERT INTO channels (id, name, description, created_at)
+    VALUES (?, ?, ?, datetime('now'));
+  `).run(id, name, description);
+  return getChannels();
+}
 
 
-export { createTables, insertMessage, getChannels, getMessages }
+
+export { createTables, insertMessage, getChannels, getMessages, addChannel }

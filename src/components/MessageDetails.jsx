@@ -1,4 +1,6 @@
-function MessageDetails({ message }) {
+import { memo } from "react";
+
+const MessageDetails = memo(function ({ message }) {
     const {
         title,
         type,
@@ -66,6 +68,6 @@ function MessageDetails({ message }) {
             </div >
         </div >
     );
-}
+})
 
 export default MessageDetails;

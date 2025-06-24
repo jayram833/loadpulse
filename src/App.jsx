@@ -4,12 +4,30 @@ import Header from "./components/Header";
 import ChannelList from "./components/ChannelList";
 import MessageDetails from "./components/MessageDetails";
 import EmptyState from "./components/EmptyState";
+import AddChannelForm from "./components/AddChannelForm";
 
 
 function App() {
   const [channels, setChannels] = useState([]);
+  const [channelsList, setChannelsList] = useState([]);
   const [expandedChannelId, setExpandedChannelId] = useState(null);
   const [selectedMessage, setSelectedMessage] = useState(0);
+
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+
+  const handleCloseOverlay = () => {
+    setIsOverlayOpen(false);
+  };
+
+  const handleAddChannel = async function (entry) {
+    console.log(entry)
+    const updatedChanels = await window.api.addChannel(entry);
+    setChannelsList(updatedChanels);
+  };
+
+  const handleOpenForm = function () {
+    setIsOverlayOpen(true);
+  }
 
   const handleSelectChannel = (channelId) => {
     setExpandedChannelId((prev) => (prev === channelId ? null : channelId));
@@ -18,6 +36,20 @@ function App() {
   const handleSelectMessage = (message) => {
     setSelectedMessage(message);
   };
+
+  const handleSearchMessage = function (loadId) {
+    if (!loadId) return;
+    for (const channel of channels) {
+      const message = channel.messages.find(msg => msg.load_id === loadId);
+      if (message) {
+        setSelectedMessage(message);
+        setExpandedChannelId(channel.id);
+        return;
+      }
+    }
+    alert("No message found for that Load ID.");
+  }
+
 
   useEffect(() => {
     window.api.onNewMessage((msg) => {
@@ -29,13 +61,13 @@ function App() {
             : ch
         )
       );
-
     });
   }, []);
 
 
   async function fetchData() {
-    const channelsList = await window.api.getChannels();
+    const channelLst = await window.api.getChannels();
+    setChannelsList(channelLst);
 
     const channelsWithMessages = await Promise.all(channelsList.map(async (ch) => {
       const messages = await window.api.getMessagesForChannel(ch.id);
@@ -46,11 +78,11 @@ function App() {
 
   useEffect(() => {
     fetchData();
-  }, [])
+  }, [channels])
 
   return (
     <div className="h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white font-sans ">
-      <Header />
+      <Header onSearchMessage={handleSearchMessage} />
       <Layout
         sidebar={
           <ChannelList
@@ -59,6 +91,7 @@ function App() {
             onSelectChannel={handleSelectChannel}
             onSelectMessage={handleSelectMessage}
             selectedMessage={selectedMessage}
+            onAddChannel={handleOpenForm}
           />
         }
         content={
@@ -69,6 +102,9 @@ function App() {
           )
         }
       />
+      <AddChannelForm isOpen={isOverlayOpen}
+        onClose={handleCloseOverlay}
+        onAdd={handleAddChannel} />
     </div>
   );
 }

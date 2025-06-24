@@ -11,7 +11,7 @@ const cities = [
     { origin: ['Kansas City', 'MO'], dest: ['Omaha', 'NE'] }
 ];
 
-let counter = 1;
+let counter = 950000;
 
 function randomWeight() {
     return `${18000 + Math.floor(Math.random() * 7000)} lbs`;
@@ -31,7 +31,7 @@ function generateMessage() {
 
     const message = {
         id: `msg-${counter++}`,
-        channel_id: 'load-bot',
+        channel_id: 'testing-channel',
         load_id: `LD${50000 + counter}`,
         account_name: `Bot Freight ${counter}`,
         origin_city: originCity,
@@ -51,7 +51,7 @@ function generateMessage() {
     };
 
     return {
-        channel: 'load-bot',
+        channel: 'testing-channel',
         content: message
     };
 }
@@ -67,4 +67,4 @@ async function sendMessage() {
 }
 
 // Send every 5 seconds
-setInterval(sendMessage, 500);
+setInterval(sendMessage, 2000);

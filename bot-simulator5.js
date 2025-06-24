@@ -16,7 +16,7 @@ const cities = [
     { origin: ['Spokane', 'WA'], dest: ['Boise', 'ID'] }
 ];
 
-let counter = 60000;
+let counter = 85000;
 
 function randomWeight() {
     return `${18000 + Math.floor(Math.random() * 7000)} lbs`;
