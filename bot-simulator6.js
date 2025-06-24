@@ -16,7 +16,7 @@ const cities = [
     { origin: ['Spokane', 'WA'], dest: ['Boise', 'ID'] }
 ];
 
-let counter = 15000;
+let counter = 75000;
 
 function randomWeight() {
     return `${18000 + Math.floor(Math.random() * 7000)} lbs`;
@@ -36,7 +36,7 @@ function generateMessage() {
 
     const message = {
         id: `msg-${counter++}`,
-        channel_id: 'east-coast',
+        channel_id: 'test-bot',
         load_id: `LD${50000 + counter}`,
         account_name: `Bot Freight ${counter}`,
         origin_city: originCity,
@@ -56,7 +56,7 @@ function generateMessage() {
     };
 
     return {
-        channel: 'east-coast',
+        channel: 'test-bot',
         content: message
     };
 }
