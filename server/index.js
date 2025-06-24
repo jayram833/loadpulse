@@ -3,27 +3,23 @@ import { WebSocketServer } from 'ws';
 import bodyParser from 'body-parser';
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
-import https from 'https';
+import http from 'http';
 import dotenv from "dotenv";
-import fs from 'fs';
 
 dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-const HTTPS_PORT = process.env.HTTPS_PORT || 443;
+const server = http.createServer(app);
 
-const privateKey = fs.readFileSync(process.env.SSL_KEY_PATH, 'utf8');
-const certificate = fs.readFileSync(process.env.SSL_CERT_PATH, 'utf8');
-const credentials = { key: privateKey, cert: certificate };
-
-const server = https.createServer(credentials, app);
-
+// ⬅️ Attach WebSocket server to the same HTTP server
 const wss = new WebSocketServer({ server });
 
+// Track connected clients
 const clients = new Set();
 
-
+// Middleware
 const rateLimiter = rateLimit({
     windowMs: Number(process.env.RATE_LIMIT_WINDOW_MINUTES || 15) * 60 * 1000,
     max: Number(process.env.RATE_LIMIT_MAX || 1000),
@@ -33,16 +29,18 @@ app.use(rateLimiter);
 app.use(bodyParser.json({ limit: '1mb' }));
 app.use(helmet());
 
-// ✅ Error Handler
+// Error Handler
 app.use((err, req, res, next) => {
     console.error('Unhandled error', err);
     res.status(500).json({ error: 'Internal Server Error' });
 });
 
+// Health check
 app.get("/health", (req, res) => {
     res.send("OK");
 });
 
+// WebSocket logic
 wss.on('connection', (ws) => {
     console.log('✅ Client connected');
     clients.add(ws);
@@ -58,6 +56,7 @@ wss.on('connection', (ws) => {
     });
 });
 
+// POST endpoint to broadcast messages
 app.post('/send', (req, res) => {
     const message = { content: req.body };
     console.log("Message body", message);
@@ -70,6 +69,7 @@ app.post('/send', (req, res) => {
     res.json({ success: true });
 });
 
-server.listen(HTTPS_PORT, () => {
-    console.log(`🚀 HTTPS + WebSocket server running on https://localhost:${HTTPS_PORT}`);
+// Start server
+server.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
