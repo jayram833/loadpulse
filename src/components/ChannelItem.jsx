@@ -22,9 +22,8 @@ function ChannelItem({ channel, isExpanded, onToggleExpand, selectedMessage, onS
             >
                 <span className="font-semibold text-gray-800 dark:text-white">{channel.name}</span>
                 <div className="flex items-center gap-2">
-                    <span>
+                    <span className="text-blue-800 dark:text-blue-400">
                         {channel.messages.length}
-
                     </span>
                     <span className="text-sm text-gray-500 dark:text-gray-300">
                         {isExpanded ? "▲" : "▼"}
@@ -42,14 +41,11 @@ function ChannelItem({ channel, isExpanded, onToggleExpand, selectedMessage, onS
                             selectedMessage={selectedMessage}
                         />
                     ))}
-
                     {visibleCount < channel.messages.length && (
                         <div ref={ref} className="h-6" />
                     )}
                 </div>
             )}
-
-
 
             {isExpanded && channel.messages.length === 0 && (
                 <div className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400 italic bg-white dark:bg-[#1e1e1e] border-t border-gray-100 dark:border-gray-700">

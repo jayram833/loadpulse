@@ -4,8 +4,7 @@
   "version": "0.0.0",
   "author": "Jay",
   "description": "LoadPulse is a lightweight desktop app that mimics MS Teams channel messaging for logistics bots. It receives real-time BID/NO BID updates from bots via WebSocket, stores messages in a local SQLite database, and displays them in an organized channel-based interface.",
-  "type": "module",
-  "main": "electron/main.js",
+  "main": "electron/main.cjs",
   "build": {
     "appId": "com.example.loadpulse",
     "productName": "LoadPulse",
@@ -18,21 +17,39 @@
       "buildResources": "assets"
     },
     "mac": {
-      "target": "dmg",
       "icon": "src/assets/icons/icon.icns",
-      "identity": null,
-      "category": "public.app-category.utilities"
+      "category": "public.app-category.utilities",
+      "darkModeSupport": true,
+      "artifactName": "${productName}-mac-${version}.${ext}",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "sign": false
     },
     "extraResources": [
       {
+        "from": "node_modules/ws",
+        "to": "node_modules/ws"
+      },
+      {
+        "from": "node_modules/better-sqlite3",
+        "to": "node_modules/better-sqlite3"
+      },
+      {
+        "from": "node_modules/bindings",
+        "to": "node_modules/bindings"
+      },
+      {
+    "from": "node_modules/file-uri-to-path",
+    "to": "node_modules/file-uri-to-path"
+  },
+      {
         "from": "electron/database/database/loadpulse.db",
-        "to": "loadpulse.db"
+        "to": "electron/loadpulse.db"
       }
     ],
-    "asarUnpack": [
-      "node_modules/better-sqlite3/**",
-      "node_modules/ws/**"
-    ]
+    "asarUnpack": []
   },
   "scripts": {
     "dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
@@ -44,11 +61,13 @@
   "dependencies": {
     "axios": "^1.10.0",
     "better-sqlite3": "^11.10.0",
+    "bindings": "^1.5.0",
     "body-parser": "^2.2.0",
     "cross-env": "^7.0.3",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "express-rate-limit": "^7.5.1",
+    "file-uri-to-path": "^2.0.0",
     "helmet": "^8.1.0",
     "lucide-react": "^0.518.0",
     "react": "^19.1.0",

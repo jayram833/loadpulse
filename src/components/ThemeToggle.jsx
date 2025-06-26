@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useLocalStorage } from "../hooks/useLocalStorage"
 import { Sun, Moon } from "lucide-react";
 
 function ThemeToggle() {
-    const [darkMode, setDarkMode] = useState(false);
+    const [darkMode, setDarkMode] = useLocalStorage("theme", true);
 
     useEffect(() => {
         const classList = document.documentElement.classList;
@@ -29,7 +30,6 @@ function ThemeToggle() {
         backdrop-blur-sm group
       `}
         >
-            {/* Optional glossy effect */}
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-transparent to-black/5 dark:to-white/5 pointer-events-none"></div>
 
             {darkMode ? (

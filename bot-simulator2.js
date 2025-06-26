@@ -16,7 +16,7 @@ const cities = [
     { origin: ['Spokane', 'WA'], dest: ['Boise', 'ID'] }
 ];
 
-let counter = 15000;
+let counter = 5000;
 
 function randomWeight() {
     return `${18000 + Math.floor(Math.random() * 7000)} lbs`;
@@ -33,12 +33,11 @@ function generateMessage() {
 
     const type = randomBid();
     const isBid = type === 'BID';
-
+    const curCount = counter++;
     const message = {
-        id: `msg-${counter++}`,
-        channel_id: 'east-coast',
-        load_id: `LD${50000 + counter}`,
-        account_name: `Bot Freight ${counter}`,
+        channel_id: 2,
+        load_id: `LD${20000 + curCount}`,
+        account_name: `Bot Freight`,
         origin_city: originCity,
         origin_state: originState,
         origin_country: 'USA',
@@ -48,15 +47,13 @@ function generateMessage() {
         pickup_date: '2025-06-25',
         delivery_date: '2025-06-26',
         weight: randomWeight(),
-        make_bid: isBid ? 1 : 0,
+        make_bid: isBid ? "true" : "false",
         bid_price: isBid ? 1200 + Math.floor(Math.random() * 500) : null,
-        type,
-        title: `${type} - ${originState} to ${destinationState}`,
         timestamp: new Date().toISOString()
     };
 
     return {
-        channel: 'east-coast',
+        channel: 2,
         content: message
     };
 }
@@ -65,11 +62,11 @@ async function sendMessage() {
     const data = generateMessage();
     try {
         const res = await axios.post(SERVER_URL, data);
-        console.log('✅ Sent:', data.content.id, '-', data.content.title);
+        console.log('✅ Sent: Load Id:', data.content.load_id);
     } catch (err) {
         console.error('❌ Error sending:', err.message);
     }
 }
 
 // Send every 5 seconds
-setInterval(sendMessage, 500);
+setInterval(sendMessage, 1000);

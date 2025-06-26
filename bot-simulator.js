@@ -4,14 +4,19 @@ import axios from 'axios';
 const SERVER_URL = 'https://loadpulse.onrender.com/send';
 
 const cities = [
-    { origin: ['Houston', 'TX'], dest: ['Atlanta', 'GA'] },
-    { origin: ['Miami', 'FL'], dest: ['Charlotte', 'NC'] },
-    { origin: ['Cleveland', 'OH'], dest: ['Detroit', 'MI'] },
-    { origin: ['San Diego', 'CA'], dest: ['Las Vegas', 'NV'] },
-    { origin: ['Kansas City', 'MO'], dest: ['Omaha', 'NE'] }
+    { origin: ['Boston', 'MA'], dest: ['Buffalo', 'NY'] },
+    { origin: ['Minneapolis', 'MN'], dest: ['Des Moines', 'IA'] },
+    { origin: ['Phoenix', 'AZ'], dest: ['Albuquerque', 'NM'] },
+    { origin: ['Nashville', 'TN'], dest: ['Birmingham', 'AL'] },
+    { origin: ['Tampa', 'FL'], dest: ['Savannah', 'GA'] },
+    { origin: ['Indianapolis', 'IN'], dest: ['Columbus', 'OH'] },
+    { origin: ['Raleigh', 'NC'], dest: ['Richmond', 'VA'] },
+    { origin: ['Milwaukee', 'WI'], dest: ['Lincoln', 'NE'] },
+    { origin: ['Denver', 'CO'], dest: ['El Paso', 'TX'] },
+    { origin: ['Spokane', 'WA'], dest: ['Boise', 'ID'] }
 ];
 
-let counter = 950000;
+let counter = 1;
 
 function randomWeight() {
     return `${18000 + Math.floor(Math.random() * 7000)} lbs`;
@@ -28,12 +33,11 @@ function generateMessage() {
 
     const type = randomBid();
     const isBid = type === 'BID';
-
+    const curCount = counter++;
     const message = {
-        id: `msg-${counter++}`,
-        channel_id: 'testing-channel',
-        load_id: `LD${50000 + counter}`,
-        account_name: `Bot Freight ${counter}`,
+        channel_id: 1,
+        load_id: `LD${50000 + curCount}`,
+        account_name: `JB Hunt`,
         origin_city: originCity,
         origin_state: originState,
         origin_country: 'USA',
@@ -43,15 +47,13 @@ function generateMessage() {
         pickup_date: '2025-06-25',
         delivery_date: '2025-06-26',
         weight: randomWeight(),
-        make_bid: isBid ? 1 : 0,
+        make_bid: isBid ? "true" : "false",
         bid_price: isBid ? 1200 + Math.floor(Math.random() * 500) : null,
-        type,
-        title: `${type} - ${originState} to ${destinationState}`,
         timestamp: new Date().toISOString()
     };
 
     return {
-        channel: 'testing-channel',
+        channel: 1,
         content: message
     };
 }
@@ -60,11 +62,10 @@ async function sendMessage() {
     const data = generateMessage();
     try {
         const res = await axios.post(SERVER_URL, data);
-        console.log('✅ Sent:', data.content.id, '-', data.content.title);
+        console.log('✅ Sent: Load ID:', data.content.load_id);
     } catch (err) {
         console.error('❌ Error sending:', err.message);
     }
 }
 
-// Send every 5 seconds
-setInterval(sendMessage, 2000);
+setInterval(sendMessage, 1000);

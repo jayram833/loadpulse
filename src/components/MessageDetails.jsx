@@ -21,8 +21,8 @@ const MessageDetails = memo(function ({ message }) {
     } = message;
 
     const typeStyles = {
-        BID: "bg-green-100 text-green-800",
-        NO_BID: "bg-red-100 text-red-800",
+        true: "bg-green-100 text-green-800",
+        false: "bg-red-100 text-red-800",
         INFO: "bg-blue-100 text-blue-800",
     };
 
@@ -35,8 +35,8 @@ const MessageDetails = memo(function ({ message }) {
                         {new Date(timestamp).toLocaleString()}
                     </p>
                 </div>
-                <span className={`px-3 py-1 text-sm font-medium rounded-full ${typeStyles[type]}`}>
-                    {type}
+                <span className={`px-3 py-1 text-sm font-medium rounded-full ${typeStyles[makeBid]}`}>
+                    {makeBid === "true" ? "BID" : "NO BID"}
                 </span>
             </div>
 
@@ -62,8 +62,11 @@ const MessageDetails = memo(function ({ message }) {
                     <span className="font-semibold">Weight:</span> {weight}
                 </div>
                 <div>
+                    <span className="font-semibold">Make Bid:</span> {makeBid}
+                </div>
+                <div>
                     <span className="font-semibold">Bid Price:</span>{" "}
-                    {makeBid ? bidPrice : "N/A"}
+                    {makeBid === "true" ? bidPrice : "N/A"}
                 </div>
             </div >
         </div >

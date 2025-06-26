@@ -2,7 +2,7 @@ import ChannelItem from "./ChannelItem";
 
 function ChannelList({ channels, expandedChannelId, onSelectChannel, onSelectMessage, selectedMessage, onAddChannel }) {
     return (
-        <div className="p-4 space-y-4">
+        <div className="py-4 pl-2 pr-2 space-y-4">
             <div className="flex justify-between items-center">
                 <h2 className="text-lg font-semibold text-[#323130] dark:text-[#f3f2f1]  tracking-wide">
                     Channels
